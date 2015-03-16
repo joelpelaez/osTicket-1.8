@@ -33,6 +33,7 @@ require_once(INCLUDE_DIR.'class.dynamic_forms.php');
 require_once(INCLUDE_DIR.'class.user.php');
 require_once(INCLUDE_DIR.'class.collaborator.php');
 
+include_once(INCLUDE_DIR.'class.pcdepot.php');
 
 class Ticket {
 
@@ -1913,10 +1914,11 @@ class Ticket {
 
     //Insert Internal Notes
     function logNote($title, $note, $poster='SYSTEM', $alert=true) {
+	global $cfg;
 
         $errors = array();
         //Unless specified otherwise, assume HTML
-        if ($note && is_string($note))
+        if ($note && is_string($note) && $cfg->isHtmlThreadEnabled())
             $note = new HtmlThreadBody($note);
 
         return $this->postNote(
@@ -2811,6 +2813,9 @@ class Ticket {
             if (!$vars['name'])
                 $errors['name'] = __('Name is required');
         }
+
+        // PCDEPOT Specific Info Process
+        Pcdepot::parse($vars);
 
         if (!$thisstaff->canAssignTickets())
             unset($vars['assignId']);

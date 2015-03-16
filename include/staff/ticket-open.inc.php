@@ -364,6 +364,64 @@ print $response_form->getField('attachments')->render();
         <?php
         } //end canPostReply
         ?>
+        <!-- PCDEPOT Ticket specific information. Added to internal note as text. -->
+        <tr>
+            <th colspan="2">
+                <em><strong><?php echo __('Información del equipo');?></strong>
+                <font class="error">&nbsp;<?php echo $errors['pcdepot']; ?></font></em>
+            </th>
+        </tr>
+        <tr>
+            <td colspan="2">
+            <table border="0" cellspacing="0" cellpadding="2" width="100%">
+                <tr>
+                    <td width="100"><?php echo __('Tipo de equipo');?>:</td>
+                    <td>
+                        <select name="pctype">
+                            <option value="desktop"><?php echo __('Desktop');?></option>
+                            <option value="laptop"><?php echo __('Laptop');?></option>
+                            <option value="tablet"><?php echo __('Tablet');?></option>
+                            <option value="printer"><?php echo __('Impresora');?></option>
+                            <option value="mac"><?php echo __('Apple Computer');?></option>
+                            <option value="other"><?php echo __('Other');?></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100"><?php echo __('¿El equipo enciende?');?></td>
+                    <td>
+                        <label><input type="radio" name="turn" value="yes"><?php echo __('Yes');?>&nbsp;</label>
+                        <label><input type="radio" name="turn" value="no"><?php echo __('No');?></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100"><?php echo __('¿Cuáles objetos trae el equipo?');?></td>
+                    <td>
+                        <label><input type="checkbox" name="adapter" value="yes"><?php echo __('Adaptador de corriente');?>&nbsp;</label>
+                        <label><input type="checkbox" name="battery" value="yes"><?php echo __('Batería');?>&nbsp;</label>
+                        <label><input type="checkbox" name="usb" value="yes"><?php echo __('Cable USB');?>&nbsp;</label>
+                        <label><input type="checkbox" name="mouse" value="yes"><?php echo __('Ratón');?></label>
+                        <br>
+                        <label><input type="checkbox" name="keyboard" value="yes"><?php echo __('Teclado');?>&nbsp;</label>
+                        <label><input type="checkbox" name="bag" value="yes"><?php echo __('Funda');?>&nbsp;</label>
+                        <label><input type="checkbox" name="manual" value="yes"><?php echo __('Manuales y CD\'s');?>&nbsp;</label>
+                        <label><input type="checkbox" name="hdd" value="yes"><?php echo __('Disco Duro');?></label>
+                        <br>
+                        <label><input type="checkbox" name="ram" value="yes"><?php echo __('Memoria RAM');?>&nbsp;</label>
+                        <label><input type="checkbox" name="other" value="yes"><?php echo __('Other');?>:&nbsp;</label>
+                        <input type="text" name="other_obj">
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100"><?php echo __('Contraseña del equipo (si tiene)');?></td>
+                    <td>
+                        <input type="text" name="password">
+                    </td>
+                </tr>
+            </table>
+            </td>
+        </tr>
+        <!-- End specific ticket information -->
         <tr>
             <th colspan="2">
                 <em><strong><?php echo __('Internal Note');?></strong>
