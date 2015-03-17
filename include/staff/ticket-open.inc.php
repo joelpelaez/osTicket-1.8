@@ -378,44 +378,170 @@ print $response_form->getField('attachments')->render();
                     <td width="100"><?php echo __('Tipo de equipo');?>:</td>
                     <td>
                         <select name="pctype">
-                            <option value="desktop"><?php echo __('Desktop');?></option>
-                            <option value="laptop"><?php echo __('Laptop');?></option>
-                            <option value="tablet"><?php echo __('Tablet');?></option>
-                            <option value="printer"><?php echo __('Impresora');?></option>
-                            <option value="mac"><?php echo __('Apple Computer');?></option>
-                            <option value="other"><?php echo __('Other');?></option>
+                            <option value="desktop" selected="selected"><?php echo __('Desktop');?></option>
+                            <option value="laptop" <?php echo ($info['pctype']=='laptop')?'selected="selected"':'';?>><?php echo __('Laptop');?></option>
+                            <option value="tablet" <?php echo ($info['pctype']=='tablet')?'selected="selected"':'';?>><?php echo __('Tablet');?></option>
+                            <option value="printer" <?php echo ($info['pctype']=='printer')?'selected="selected"':'';?>><?php echo __('Impresora');?></option>
+                            <option value="mac"<?php echo ($info['pctype']=='mac')?'selected="selected"':'';?>><?php echo __('Apple Computer');?></option>
+                            <option value="other"<?php echo ($info['pctype']=='other')?'selected="selected"':'';?>><?php echo __('Other');?></option>
                         </select>
                     </td>
                 </tr>
                 <tr>
+                    <td width="100"><?php echo __('Servicio que necesita');?></td>
+                    <td>
+                        <select name="service" id="servicetype">
+                            <option value="diagnostic" selected="selected"><?php echo __('Diagnóstico');?></option>
+                            <option value="mhardware" 
+                                <?php echo ($info['service']=='mhardware')?'selected="selected"':'';?>><?php echo __('Mantenimiento de hardware');?></option>
+                            <option value="msoftware" 
+                                <?php echo ($info['service']=='msoftware')?'selected="selected"':'';?>><?php echo __('Limpieza de software');?></option>
+                            <option value="price" 
+                                <?php echo ($info['service']=='price')?'selected="selected"':'';?>><?php echo __('Cotización');?></option>
+                            <option value="format" 
+                                <?php echo ($info['service']=='format')?'selected="selected"':'';?>><?php echo __('Formato');?></option>
+                            <option value="install" 
+                                <?php echo ($info['service']=='install')?'selected="selected"':'';?>><?php echo __('Instalación de software');?></option>
+                            <option value="backup" 
+                                <?php echo ($info['service']=='backup')?'selected="selected"':'';?>><?php echo __('Respaldo de información');?></option>
+                        </select>
+                        <script type="text/javascript">
+                            function forms_update() {
+                                var op = $("#servicetype").val();
+                                if (op == "format") {
+                                    $("#backup_info").show();
+                                    outlook_enable();
+                                    $("#format_info").show();
+                                    $("#install_info").show();
+                                }
+                                else if (op == "backup") {
+                                    $("#backup_info").show();
+                                    outlook_enable();
+                                    $("#format_info").hide();
+                                    $("#install_info").hide();
+                                }
+                                else {
+                                    $("#backup_info").hide();
+                                    $("#outlook_info").hide();
+                                    $("#format_info").hide();
+                                    $("#install_info").hide();
+                                }
+                            }
+                            $("#servicetype").change(forms_update);
+                            $(document).ready(forms_update);
+                        </script>
+                    </td>
+                <tr>
                     <td width="100"><?php echo __('¿El equipo enciende?');?></td>
                     <td>
-                        <label><input type="radio" name="turn" value="yes"><?php echo __('Yes');?>&nbsp;</label>
-                        <label><input type="radio" name="turn" value="no"><?php echo __('No');?></label>
+                        <label><input type="radio" name="turn" value="yes" checked="checked"><?php echo __('Yes');?></label><br>
+                        <label><input type="radio" name="turn" value="noboot"
+                            <?php echo ($info['turn']=='noboot')?'checked="checked"':'';?>><?php echo __('Prende pero no arranca sistema');?></label><br>
+                        <label><input type="radio" name="turn" value="no"
+                            <?php echo ($info['turn']=='no')?'checked="checked"':'';?>><?php echo __('No');?></label>
                     </td>
                 </tr>
                 <tr>
-                    <td width="100"><?php echo __('¿Cuáles objetos trae el equipo?');?></td>
+                    <td width="100"><?php echo __('¿Cuáles elementos trae el equipo?');?></td>
                     <td>
-                        <label><input type="checkbox" name="adapter" value="yes"><?php echo __('Adaptador de corriente');?>&nbsp;</label>
-                        <label><input type="checkbox" name="battery" value="yes"><?php echo __('Batería');?>&nbsp;</label>
-                        <label><input type="checkbox" name="usb" value="yes"><?php echo __('Cable USB');?>&nbsp;</label>
-                        <label><input type="checkbox" name="mouse" value="yes"><?php echo __('Ratón');?></label>
+                        <label><input type="checkbox" name="adapter" value="yes"
+                            <?php echo ($info['adapter']=='yes')?'checked="checked"':'';?>><?php echo __('Adaptador de corriente');?></label><br>
+                        <label><input type="checkbox" name="battery" value="yes"
+                            <?php echo ($info['battery']=='yes')?'checked="checked"':'';?>><?php echo __('Batería');?></label><br>
+                        <label><input type="checkbox" name="usb" value="yes"
+                            <?php echo ($info['usb']=='yes')?'checked="checked"':'';?>><?php echo __('Cable USB');?></label><br>
+                        <label><input type="checkbox" name="mouse" value="yes"
+                            <?php echo ($info['mouse']=='yes')?'checked="checked"':'';?>><?php echo __('Ratón');?></label><br>
+                        <label><input type="checkbox" name="keyboard" value="yes"
+                            <?php echo ($info['keyboard']=='yes')?'checked="checked"':'';?>><?php echo __('Teclado');?></label><br>
+                        <label><input type="checkbox" name="bag" value="yes"
+                            <?php echo ($info['bag']=='yes')?'checked="checked"':'';?>><?php echo __('Funda');?></label><br>
+                        <label><input type="checkbox" name="manual" value="yes"
+                            <?php echo ($info['manual']=='yes')?'checked="checked"':'';?>><?php echo __('Manuales y CD\'s');?></label><br>
+                        <label><input type="checkbox" name="hdd" value="yes"
+                            <?php echo ($info['hdd']=='yes')?'checked="checked"':'';?>><?php echo __('Disco Duro');?></label><br>
+                        <label><input type="checkbox" name="ram" value="yes"
+                            <?php echo ($info['ram']=='yes')?'checked="checked"':'';?>><?php echo __('Memoria RAM');?></label><br>
+                        <label><input type="checkbox" name="other" value="yes"
+                            <?php echo ($info['other']=='yes')?'checked="checked"':'';?>><?php echo __('Other');?>:&nbsp;</label>
+                        <input type="text" name="other_obj" value="<?php echo $info['other_obj'];?>">
+                    </td>
+                </tr>
+                <tr id="backup_info">
+                    <td width="100"><?php echo __('¿Que información se respaldará? (Si aplica)');?></td>
+                    <td>
+                        <label><input type="checkbox" name="home" value="yes"
+                            <?php echo ($info['home']=='yes')?'checked="checked"':'';?>><?php echo __('Carpeta de usuario');?></label><br>
+                        <label><input type="checkbox" name="outlook" id="outlook"
+                            <?php echo ($info['outlook']=='yes')?'checked="checked"':'';?>><?php echo __('Outlook');?></label><br>
+                        <script type="text/javascript">
+                             function outlook_enable() {
+                                 if (this.checked) {
+                                     $("#outlook_info").show();
+                                 }
+                                 else {
+                                     $("#outlook_info").hide();
+                                 }
+                             }
+                             $("#outlook").change(outlook_enable);
+                        </script>
+                        <label><input type="checkbox" name="backup" value="yes"
+                            <?php echo ($info['backup']=='yes')?'checked="checked"':'';?>><?php echo __('Other');?></label>
+                        <input type="text" name="backup_obj" value="<?php echo $info['backup_obj'];?>">
+                    </td>
+                </tr>
+                <tr id="outlook_info">
+                    <td width="100"><?php echo __('Información de Outlook');?></td>
+                    <td id="acc_list">
+                        <div id="acc_info">
+                            <?php echo __('Cuenta de correo');?> 1:&nbsp;<input type="text" class="outlook_email" name="account[]"><br>
+                            <?php echo __('Contraseña');?> 1:&nbsp;<input type="text" class="outlook_pass" name="acc_pass[]"><br>
+                        </div>
+                        <a href="#" id="acc_add" onclick="return add_account();"><?php echo __('Añadir cuenta');?></a>
+                        <script type="text/javascript">
+                            var count = 1;
+                            function add_account( email, pass ) {
+                                email = email || "";
+                                pass = pass || "";
+                                var element = $("#acc_info").clone();
+                                element.removeAttr("id");
+                                element.appendTo("#acc_list");
+                                element.html(element.html().replace("<?php echo __('Cuenta de correo');?>" + " " + 1, 
+                                    "<?php echo __('Cuenta de correo');?>" + " " + (count + 1)));
+                                element.html(element.html().replace("<?php echo __('Contraseña');?>" + " " + 1, 
+                                    "<?php echo __('Contraseña');?>" + " " + (count + 1)));
+                                count++;
+                                $(element).children(".outlook_email").val(email);
+                                $(element).children(".outlook_pass").val(pass);
+                                $("#acc_add").appendTo("#acc_list");
+                                return false;
+                            }
+                        </script>
+                </tr>
+                <tr id="format_info">
+                    <td width="100"><?php echo __('Información de Formateo')?></td>
+                    <td>
+                        <?php echo __('Versión del sistema');?>:&nbsp;
+                        <select name="ostype">
+                            <option value="win7" selected="selected"><?php echo __('Windows 7');?></option>
+                            <option value="win8"
+                                <?php echo ($info['ostype']=='win8')?'selected="selected"':'';?>><?php echo __('Windows 8');?></option>
+                            <option value="win81"
+                                <?php echo ($info['ostype']=='win81')?'selected="selected"':'';?>><?php echo __('Windows 8.1');?></option>
+                            <option value="osx"
+                                <?php echo ($info['ostype']=='osx')?'selected="selected"':'';?>><?php echo __('OS X');?></option>
+                            <option value="linux"
+                                <?php echo ($info['ostype']=='linux')?'selected="selected"':'';?>><?php echo __('Linux')?></option>
+                        </select>
                         <br>
-                        <label><input type="checkbox" name="keyboard" value="yes"><?php echo __('Teclado');?>&nbsp;</label>
-                        <label><input type="checkbox" name="bag" value="yes"><?php echo __('Funda');?>&nbsp;</label>
-                        <label><input type="checkbox" name="manual" value="yes"><?php echo __('Manuales y CD\'s');?>&nbsp;</label>
-                        <label><input type="checkbox" name="hdd" value="yes"><?php echo __('Disco Duro');?></label>
-                        <br>
-                        <label><input type="checkbox" name="ram" value="yes"><?php echo __('Memoria RAM');?>&nbsp;</label>
-                        <label><input type="checkbox" name="other" value="yes"><?php echo __('Other');?>:&nbsp;</label>
-                        <input type="text" name="other_obj">
+                        <?php echo ('Idioma del sistema');?>:&nbsp;
+                        <input type="text" name="oslang" value="<?php echo $info['oslang'];?>">
                     </td>
                 </tr>
                 <tr>
                     <td width="100"><?php echo __('Contraseña del equipo (si tiene)');?></td>
                     <td>
-                        <input type="text" name="password">
+                        <input type="text" name="password" value="<?php echo $info['password'];?>">
                     </td>
                 </tr>
             </table>
