@@ -388,9 +388,9 @@ print $response_form->getField('attachments')->render();
                     </td>
                 </tr>
                 <tr>
-                    <td width="100"><?php echo __('Servicio que necesita');?></td>
+                    <td width="100"><?php echo __('Servicios que necesita');?>:</td>
                     <td>
-                        <select name="service" id="servicetype">
+                        <select name="service[]" id="servicetype" multiple="multiple">
                             <option value="diagnostic" selected="selected"><?php echo __('Diagnóstico');?></option>
                             <option value="mhardware" 
                                 <?php echo ($info['service']=='mhardware')?'selected="selected"':'';?>><?php echo __('Mantenimiento de hardware');?></option>
@@ -406,26 +406,43 @@ print $response_form->getField('attachments')->render();
                                 <?php echo ($info['service']=='backup')?'selected="selected"':'';?>><?php echo __('Respaldo de información');?></option>
                         </select>
                         <script type="text/javascript">
-                            function forms_update() {
-                                var op = $("#servicetype").val();
-                                if (op == "format") {
+                            var backup_count;
+                            var format_count;
+                            var install_count;
+                            function show_forms() {
+                                if (backup_count) {
                                     $("#backup_info").show();
                                     outlook_enable();
-                                    $("#format_info").show();
-                                    $("#install_info").show();
-                                }
-                                else if (op == "backup") {
-                                    $("#backup_info").show();
-                                    outlook_enable();
-                                    $("#format_info").hide();
-                                    $("#install_info").hide();
                                 }
                                 else {
                                     $("#backup_info").hide();
                                     $("#outlook_info").hide();
-                                    $("#format_info").hide();
-                                    $("#install_info").hide();
                                 }
+                                if (format_count)
+                                    $("#format_info").show();
+                                else
+                                    $("#format_info").hide();
+                                if (install_count)
+                                    $("#install_info").show();
+                                else
+                                    $("#install_info").hide();
+                            }
+                            function forms_update() {
+                                backup_count = format_count = install_count = false;
+                                $("#servicetype :selected").each(function(i, selected) {
+                                    if ($(selected).val() == "format") {
+                                        backup_count = true;
+                                        format_count = true;
+                                        install_count = true;
+                                    }
+                                    if ($(selected).val() == "backup") {
+                                        backup_count = true;
+                                    }
+                                    if ($(selected).val() == "install") {
+                                        install_count = true;
+                                    }
+                                });
+                                show_forms();
                             }
                             $("#servicetype").change(forms_update);
                             $(document).ready(forms_update);
@@ -467,16 +484,22 @@ print $response_form->getField('attachments')->render();
                         <input type="text" name="other_obj" value="<?php echo $info['other_obj'];?>">
                     </td>
                 </tr>
+                <tr>
+                    <td width="100"><?php echo __('Contraseña del equipo');?>:</td>
+                    <td>
+                        <input type="text" name="password" value="<?php echo $info['password'];?>">
+                    </td>
+                </tr>
                 <tr id="backup_info">
-                    <td width="100"><?php echo __('¿Que información se respaldará? (Si aplica)');?></td>
+                    <td width="100"><?php echo __('¿Que información se respaldará?');?></td>
                     <td>
                         <label><input type="checkbox" name="home" value="yes"
                             <?php echo ($info['home']=='yes')?'checked="checked"':'';?>><?php echo __('Carpeta de usuario');?></label><br>
-                        <label><input type="checkbox" name="outlook" id="outlook"
+                        <label><input type="checkbox" name="outlook" value="yes" id="outlook"
                             <?php echo ($info['outlook']=='yes')?'checked="checked"':'';?>><?php echo __('Outlook');?></label><br>
                         <script type="text/javascript">
                              function outlook_enable() {
-                                 if (this.checked) {
+                                 if ($("#outlook").prop("checked")) {
                                      $("#outlook_info").show();
                                  }
                                  else {
@@ -516,6 +539,14 @@ print $response_form->getField('attachments')->render();
                                 $("#acc_add").appendTo("#acc_list");
                                 return false;
                             }
+                            $("#acc_list .outlook_email").val("<?php echo $info['account'][0];?>");
+                            $("#acc_list .outlook_pass").val("<?php echo $info['acc_pass'][0];?>");
+                            <?php
+                                $n = count($info['account']);
+                                for ($i = 1; $i < $n; $i++) {
+                                    echo "add_account(\"{$info['account'][$i]}\",\"{$info['acc_pass'][$i]}\");";
+                                }
+                            ?>
                         </script>
                 </tr>
                 <tr id="format_info">
@@ -538,10 +569,25 @@ print $response_form->getField('attachments')->render();
                         <input type="text" name="oslang" value="<?php echo $info['oslang'];?>">
                     </td>
                 </tr>
-                <tr>
-                    <td width="100"><?php echo __('Contraseña del equipo (si tiene)');?></td>
+                <tr id="install_info">
+                    <td width="100"><?php echo __('Programas a instalar');?>:</td>
                     <td>
-                        <input type="text" name="password" value="<?php echo $info['password'];?>">
+                        <label><input type="checkbox" name="utility" value="yes" checked="checked"><?php echo __('Utilerias');?></label><br>
+                        <label><input type="checkbox" name="norton" value="yes"
+                            <?php echo ($info['norton']=='yes')?'checked="checked"':'';?>><?php echo __('Norton')?></label><br>
+                        <label><input type="checkbox" name="kaspersky" value="yes"
+                            <?php echo ($info['kaspersky']=='yes')?'checked="checked"':'';?>><?php echo __('Kaspersky')?></label><br>
+                        <label><input type="checkbox" name="autocad" value="yes"
+                            <?php echo ($info['autocad']=='yes')?'checked="checked"':'';?>><?php echo __('AutoCAD')?></label><br>
+                        <label><input type="checkbox" name="corel" value="yes"
+                            <?php echo ($info['corel']=='yes')?'checked="checked"':'';?>><?php echo __('Corel');?></label><br>
+                        <label><input type="checkbox" name="adobe_cc" value="yes"
+                            <?php echo ($info['adobe_cc']=='yes')?'checked="checked"':'';?>><?php echo __('Adobe CS6/CC');?></label><br>
+                        <label><input type="checkbox" name="contpaqi" value="yes"
+                            <?php echo ($info['contpaqi']=='yes')?'checked="checked"':'';?>><?php echo __('CONTPAQi');?></label><br>
+                        <label><input type="checkbox" name="sother" value="yes"
+                            <?php echo ($info['sother']=='yes')?'checked="checked"':'';?>><?php echo __('Other');?>:&nbsp;</label>
+                        <input type="text" name="sother_obj" value="<?php echo $info['sother_obj'];?>">
                     </td>
                 </tr>
             </table>
