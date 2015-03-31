@@ -6,6 +6,15 @@ class Pcdepot {
             && preg_match('/@.+\./', $email);
     }
 
+    public static function check_service($vars, $service) {
+        foreach ($vars as $st) {
+            if ($st == $service)
+                return true;
+        }
+
+        return false;
+    }
+
     public static function parse(&$vars) {
         global $cfg;
         // Check computer type

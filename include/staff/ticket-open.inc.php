@@ -393,17 +393,17 @@ print $response_form->getField('attachments')->render();
                         <select name="service[]" id="servicetype" multiple="multiple">
                             <option value="diagnostic" selected="selected"><?php echo __('Diagnóstico');?></option>
                             <option value="mhardware" 
-                                <?php echo ($info['service']=='mhardware')?'selected="selected"':'';?>><?php echo __('Mantenimiento de hardware');?></option>
+                                <?php echo Pcdepot::check_service($info['service'], 'mhardware')?'selected="selected"':'';?>><?php echo __('Mantenimiento de hardware');?></option>
                             <option value="msoftware" 
-                                <?php echo ($info['service']=='msoftware')?'selected="selected"':'';?>><?php echo __('Limpieza de software');?></option>
+                                <?php echo Pcdepot::check_service($info['service'], 'msoftware')?'selected="selected"':'';?>><?php echo __('Limpieza de software');?></option>
                             <option value="price" 
-                                <?php echo ($info['service']=='price')?'selected="selected"':'';?>><?php echo __('Cotización');?></option>
+                                <?php echo Pcdepot::check_service($info['service'], 'price')?'selected="selected"':'';?>><?php echo __('Cotización');?></option>
                             <option value="format" 
-                                <?php echo ($info['service']=='format')?'selected="selected"':'';?>><?php echo __('Formato');?></option>
+                                <?php echo Pcdepot::check_service($info['service'], 'format')?'selected="selected"':'';?>><?php echo __('Formato');?></option>
                             <option value="install" 
-                                <?php echo ($info['service']=='install')?'selected="selected"':'';?>><?php echo __('Instalación de software');?></option>
+                                <?php echo Pcdepot::check_service($info['service'], 'install')?'selected="selected"':'';?>><?php echo __('Instalación de software');?></option>
                             <option value="backup" 
-                                <?php echo ($info['service']=='backup')?'selected="selected"':'';?>><?php echo __('Respaldo de información');?></option>
+                                <?php echo Pcdepot::check_service($info['service'], 'backup')?'selected="selected"':'';?>><?php echo __('Respaldo de información');?></option>
                         </select>
                         <script type="text/javascript">
                             var backup_count;
