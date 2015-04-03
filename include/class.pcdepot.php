@@ -7,6 +7,9 @@ class Pcdepot {
     }
 
     public static function check_service($vars, $service) {
+        if (!isset($vars))
+            return false;
+
         foreach ($vars as $st) {
             if ($st == $service)
                 return true;
